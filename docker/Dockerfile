@@ -19,9 +19,9 @@ RUN 	apt-get update \
 		python3-tk
 
 # Install python 3.6
-RUN wget https://www.python.org/ftp/python/3.6.7/Python-3.6.7.tar.xz \
-	&& tar xvf Python-3.6.7.tar.xz \
-	&& cd Python-3.6.7 \
+RUN wget https://www.python.org/ftp/python/3.8.11/Python-3.8.11.tar.xz \
+	&& tar xvf Python-3.8.11.tar.xz \
+	&& cd Python-3.8.11 \
 	&& ./configure --with-zlib=/usr/include \
 	&& make \
 	&& make install \
@@ -29,7 +29,8 @@ RUN wget https://www.python.org/ftp/python/3.6.7/Python-3.6.7.tar.xz \
 	&& ln -s /usr/local/bin/pip3 /usr/local/bin/pip
 
 # Install project-specific python libraries
-RUN pip install tensorflow-gpu==1.12.0 gym matplotlib opencv-python lz4 psutil flake8 ray
+RUN pip install gym matplotlib opencv-python lz4 psutil flake8 ray
+# tensorflow-gpu==1.12.0
 
 # Symlinking for making ray work
 RUN rm -r /usr/local/lib/python3.6/site-packages/ray/rllib \
