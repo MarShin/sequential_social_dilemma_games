@@ -2,7 +2,8 @@ from ray.rllib.models.tf.misc import normc_initializer
 from ray.rllib.utils import try_import_tf
 from ray.rllib.utils.framework import get_activation_fn
 
-tf = try_import_tf()
+# tf = try_import_tf()
+import tensorflow as tf
 
 
 def build_fc_layers(model_config, last_layer, name):

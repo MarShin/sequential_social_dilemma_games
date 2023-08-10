@@ -44,7 +44,7 @@ class BaselineModel(RecurrentTFModelV2):
         self.encoder_model.summary()
 
         # Action selection/value function
-        cell_size = model_config["custom_options"].get("cell_size")
+        cell_size = model_config["custom_model_config"].get("cell_size")
         self.policy_model = ActorCriticLSTM(
             last_layer.shape[-1],
             action_space,

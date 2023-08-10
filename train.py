@@ -120,7 +120,7 @@ def build_experiment_config_dict(args):
                 "use_lstm": False,
                 "conv_filters": conv_filters,
                 "fcnet_hiddens": fcnet_hiddens,
-                "custom_options": {
+                "custom_model_config": {
                     "cell_size": lstm_cell_size,
                     "num_other_agents": args.num_agents - 1,
                 },
@@ -129,7 +129,7 @@ def build_experiment_config_dict(args):
     )
 
     if args.model != "baseline":
-        config["model"]["custom_options"].update(
+        config["model"]["custom_model_config"].update(
             {
                 "moa_loss_weight": args.moa_loss_weight,
                 "influence_reward_clip": 10,
@@ -144,7 +144,7 @@ def build_experiment_config_dict(args):
         )
 
     if args.model == "scm":
-        config["model"]["custom_options"].update(
+        config["model"]["custom_model_config"].update(
             {
                 "scm_loss_weight": args.scm_loss_weight,
                 "curiosity_reward_clip": 10,
@@ -334,7 +334,7 @@ def create_hparam_tune_dict(model, is_config=False):
 
     hparam_dict = {
         **baseline_options,
-        "model": {"custom_options": model_options},
+        "model": {"custom_model_config": model_options},
     }
     return hparam_dict
 
