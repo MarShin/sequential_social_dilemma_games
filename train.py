@@ -13,16 +13,16 @@ from ray.tune import Experiment
 from ray.tune.registry import register_env
 from ray.tune.schedulers import PopulationBasedTraining
 
-from algorithms.a3c_baseline import build_a3c_baseline_trainer
-from algorithms.a3c_moa import build_a3c_moa_trainer
-from algorithms.impala_baseline import build_impala_baseline_trainer
-from algorithms.impala_moa import build_impala_moa_trainer
-from algorithms.ppo_baseline import build_ppo_baseline_trainer
+# from algorithms.a3c_baseline import build_a3c_baseline_trainer
+# from algorithms.a3c_moa import build_a3c_moa_trainer
+# from algorithms.impala_baseline import build_impala_baseline_trainer
+# from algorithms.impala_moa import build_impala_moa_trainer
+# from algorithms.ppo_baseline import build_ppo_baseline_trainer
 from algorithms.ppo_moa import build_ppo_moa_trainer
-from algorithms.ppo_scm import build_ppo_scm_trainer
-from models.baseline_model import BaselineModel
+# from algorithms.ppo_scm import build_ppo_scm_trainer
+# from models.baseline_model import BaselineModel
 from models.moa_model import MOAModel
-from models.scm_model import SocialCuriosityModule
+# from models.scm_model import SocialCuriosityModule
 from social_dilemmas.config.default_args import add_default_args
 from social_dilemmas.envs.env_creator import get_env_creator
 from utility_funcs import update_nested_dict
@@ -229,10 +229,10 @@ def initialize_ray(args):
     ray.init(
         address=args.address,
         local_mode=args.local_mode,
-        memory=args.memory,
+        # memory=args.memory,
         object_store_memory=args.object_store_memory,
-        redis_max_memory=args.redis_max_memory,
-        include_webui=False,
+        # redis_max_memory=args.redis_max_memory,
+        # include_webui=False,
     )
 
 

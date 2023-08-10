@@ -1,13 +1,15 @@
 import numpy as np
 from ray.rllib.models.modelv2 import ModelV2
-from ray.rllib.models.tf.recurrent_tf_modelv2 import RecurrentTFModelV2
+#from ray.rllib.models.tf.recurrent_tf_modelv2 import RecurrentTFModelV2 # take the liberty of improvising with below line
+from ray.rllib.models.tf import RecurrentNetwork
 from ray.rllib.utils import try_import_tf
 from ray.rllib.utils.annotations import override
 
-tf = try_import_tf()
+# tf = try_import_tf()
+import tensorflow as tf
 
-
-class MoaLSTM(RecurrentTFModelV2):
+# class MoaLSTM(RecurrentTFModelV2):
+class MoaLSTM(RecurrentNetwork):
     def __init__(
         self,
         obs_space,
@@ -60,7 +62,7 @@ class MoaLSTM(RecurrentTFModelV2):
         outputs = [logits, state_h, state_c]
         self.rnn_model = tf.keras.Model(inputs=inputs, outputs=outputs, name="MOA_Model")
 
-    @override(RecurrentTFModelV2)
+    @override(RecurrentNetwork)
     def forward_rnn(self, input_dict, state, seq_lens):
         """
         Forward pass through the MOA LSTM.

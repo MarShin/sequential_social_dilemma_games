@@ -1,14 +1,16 @@
 from ray.rllib.agents.ppo.ppo import (
-    choose_policy_optimizer,
-    update_kl,
+    # choose_policy_optimizer,
+    # update_kl,
     validate_config,
     warn_about_bad_reward_scales,
 )
 from ray.rllib.agents.ppo.ppo_tf_policy import (
     KLCoeffMixin,
-    PPOLoss,
+    # PPOLoss,
+    ppo_surrogate_loss, # take the liberty of improvising with below line
     ValueNetworkMixin,
-    clip_gradients,
+    # clip_gradients, # take the liberty of improvising with below line
+    compute_and_clip_gradients,
     kl_and_loss_stats,
     postprocess_ppo_gae,
     setup_config,
@@ -34,7 +36,8 @@ from algorithms.common_funcs_moa import (
     validate_moa_config,
 )
 
-tf = try_import_tf()
+# tf = try_import_tf()
+import tensorflow as tf
 
 POLICY_SCOPE = "func"
 
@@ -58,24 +61,30 @@ def loss_with_moa(policy, model, dist_class, train_batch):
     else:
         mask = tf.ones_like(train_batch[Postprocessing.ADVANTAGES], dtype=tf.bool)
 
-    policy.loss_obj = PPOLoss(
+    # policy.loss_obj = PPOLoss(
+    #     dist_class,
+    #     model,
+    #     train_batch[Postprocessing.VALUE_TARGETS],
+    #     train_batch[Postprocessing.ADVANTAGES],
+    #     train_batch[SampleBatch.ACTIONS],
+    #     train_batch[SampleBatch.ACTION_DIST_INPUTS],
+    #     train_batch[SampleBatch.ACTION_LOGP],
+    #     train_batch[SampleBatch.VF_PREDS],
+    #     action_dist,
+    #     model.value_function(),
+    #     policy.kl_coeff,
+    #     mask,
+    #     policy.entropy_coeff,
+    #     policy.config["clip_param"],
+    #     policy.config["vf_clip_param"],
+    #     policy.config["vf_loss_coeff"],
+    #     policy.config["use_gae"],
+    # )
+
+    policy.loss_obj = ppo_surrogate_loss(
+        policy,
         dist_class,
-        model,
-        train_batch[Postprocessing.VALUE_TARGETS],
-        train_batch[Postprocessing.ADVANTAGES],
-        train_batch[SampleBatch.ACTIONS],
-        train_batch[SampleBatch.ACTION_DIST_INPUTS],
-        train_batch[SampleBatch.ACTION_LOGP],
-        train_batch[SampleBatch.VF_PREDS],
-        action_dist,
-        model.value_function(),
-        policy.kl_coeff,
-        mask,
-        policy.entropy_coeff,
-        policy.config["clip_param"],
-        policy.config["vf_clip_param"],
-        policy.config["vf_loss_coeff"],
-        policy.config["use_gae"],
+        train_batch
     )
 
     policy.loss_obj.loss += moa_loss.total_loss
@@ -161,7 +170,8 @@ def build_ppo_moa_trainer(moa_config):
         stats_fn=extra_moa_stats,
         extra_action_fetches_fn=extra_moa_fetches,
         postprocess_fn=postprocess_ppo_moa,
-        gradients_fn=clip_gradients,
+        # gradients_fn=clip_gradients,
+        compute_gradients_fn=compute_and_clip_gradients,
         before_init=setup_config,
         before_loss_init=setup_ppo_moa_mixins,
         mixins=[LearningRateSchedule, EntropyCoeffSchedule, KLCoeffMixin, ValueNetworkMixin]
@@ -171,11 +181,11 @@ def build_ppo_moa_trainer(moa_config):
     moa_ppo_trainer = build_trainer(
         name=trainer_name,
         default_policy=moa_ppo_policy,
-        make_policy_optimizer=choose_policy_optimizer,
+        # make_policy_optimizer=choose_policy_optimizer,
         default_config=moa_config,
         validate_config=validate_ppo_moa_config,
-        after_optimizer_step=update_kl,
-        after_train_result=warn_about_bad_reward_scales,
+        # after_optimizer_step=update_kl,
+        # after_train_result=warn_about_bad_reward_scales,
         mixins=[MOAResetConfigMixin],
     )
 

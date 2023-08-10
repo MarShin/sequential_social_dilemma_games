@@ -1,7 +1,8 @@
 import sys
 
 from ray.rllib.models.modelv2 import ModelV2
-from ray.rllib.models.tf.recurrent_tf_modelv2 import RecurrentTFModelV2
+#from ray.rllib.models.tf.recurrent_tf_modelv2 import RecurrentTFModelV2 # take the liberty of improvising with below line
+from ray.rllib.models.tf import RecurrentNetwork
 from ray.rllib.policy.rnn_sequencing import add_time_dimension
 from ray.rllib.utils import try_import_tf
 from ray.rllib.utils.annotations import override
@@ -10,10 +11,11 @@ from models.actor_critic_lstm import ActorCriticLSTM
 from models.common_layers import build_conv_layers, build_fc_layers
 from models.moa_lstm import MoaLSTM
 
-tf = try_import_tf()
+# tf = try_import_tf()
+import tensorflow as tf
 
-
-class MOAModel(RecurrentTFModelV2):
+# class MOAModel(RecurrentTFModelV2):
+class MOAModel(RecurrentNetwork):
     def __init__(self, obs_space, action_space, num_outputs, model_config, name):
         """
         A model with convolutional layers connected to two distinct sequences of fully connected
